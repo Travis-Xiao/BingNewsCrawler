@@ -28,26 +28,20 @@ def search(keyword):
 	
 	entries = procedure.extract_links(page)
 
+	lock.acquire()
+
 	for link, title in entries:
 		print title
 		m.update(title)
-		extend_keyword_hashcode.append(m.hexdigest())
-		extend_link_list.append(link)
-		extend_keyword_link.append(title)
+		title_hashcode = m.hexdigest()
 
-	lock.acquire()
-	for i in range(len(extend_keyword_link)):
-		# if the keyword has already been processed
-		if extend_keyword_hashcode[i] in covered_keyword:
+		if title_hashcode in covered_keyword:
 			continue
-		keyword_queue.add(extend_keyword_link[i])
-		covered_keyword.add(extend_keyword_hashcode[i])
-		pool.add_task(procedure.process_url, extend_link_list[i])
-		# link_list.append(extend_link_list[i])
-	lock.release()
 
-	# if not worker_captain.is_whipping():
-	# 	worker_captain.whip()
+		keyword_queue.add(title)
+		covered_keyword.add(title_hashcode)
+		pool.add_task(procedure.process_url, link)
+	lock.release()
 
 	if not manager_running:
 		process()
