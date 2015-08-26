@@ -1,6 +1,5 @@
 import requests
 import threading
-from pyquery import PyQuery
 import re
 import os
 from globals import *
@@ -74,4 +73,4 @@ if __name__ == "__main__":
 
 	seeding()
 	print keyword_queue
-	# process()
+	process()

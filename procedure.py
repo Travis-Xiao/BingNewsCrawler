@@ -2,6 +2,7 @@ import urllib2
 import urllib
 import globals
 import re
+from pyquery import PyQuery
 
 
 def process_url(url):
