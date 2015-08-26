@@ -13,6 +13,7 @@ def process_url(url):
 	storage_file = globals.m.hexdigest()[:6] + "_" + url_unquoted + ".html"
 	urllib.urlretrieve(url, globals.output_dir + storage_file)
 
+
 def extract_links(page):
 	d = PyQuery(page)
 	links = d('.newstitle>a')
@@ -26,6 +27,7 @@ def extract_links(page):
 		entries.append((title, link))
 
 	return entries
+
 
 def extract_hints(page):
 	tag_pattern = re.compile('"Txt":"[a-zA-Z0-9 ]+"')

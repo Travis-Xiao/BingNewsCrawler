@@ -21,6 +21,7 @@ def seeding():
 		m.update(hint)
 		covered_keyword.add(m.hexdigest())
 
+
 def search(keyword):
 	request = bing_news_base + keyword.replace(' ', '+')
 	r = requests.get(request)
@@ -30,7 +31,7 @@ def search(keyword):
 
 	lock.acquire()
 
-	for link, title in entries:
+	for title, link in entries:
 		print title
 		m.update(title)
 		title_hashcode = m.hexdigest()
@@ -45,6 +46,7 @@ def search(keyword):
 
 	if not manager_running:
 		process()
+
 
 def process():
 	global manager_running
@@ -66,5 +68,5 @@ if __name__ == "__main__":
 		os.makedirs(output_dir)
 
 	seeding()
-	print keyword_queue
+	# print keyword_queue
 	process()

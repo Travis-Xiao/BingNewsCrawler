@@ -1,9 +1,12 @@
 import hashlib
 import threading
-import worker
 import re
 import string
 import thread_pool
+
+
+max_search_thread = 10
+max_crawler = 10
 
 # url to search news
 bing_news_base = "http://www.bing.com/news/search?q="
@@ -32,9 +35,6 @@ covered_keyword = set()
 lock = threading.Lock()
 
 # worker_captain = worker.WorkerCaptain()
-pool = thread_pool.ThreadPool(10)
+pool = thread_pool.ThreadPool(max_crawler)
 
 regex = re.compile('[%s]+' % re.escape(string.punctuation))
-
-max_search_thread = 10
-max_crawler = 10
