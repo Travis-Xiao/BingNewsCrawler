@@ -32,7 +32,7 @@ def search(keyword):
 	lock.acquire()
 
 	for title, link in entries:
-		print title
+		print title.decode("utf8")
 		m.update(title)
 		title_hashcode = m.hexdigest()
 

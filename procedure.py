@@ -10,6 +10,7 @@ def process_url(url):
 	url_unquoted = urllib2.unquote(url.decode('utf8'))
 	globals.m.update(url_unquoted)
 	url_unquoted = globals.regex.sub(' ', url_unquoted)
+	url_unquoted = url_unquoted.replace(' ', '_')
 	storage_file = globals.m.hexdigest()[:6] + "_" + url_unquoted + ".html"
 	urllib.urlretrieve(url, globals.output_dir + storage_file)
 
