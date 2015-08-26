@@ -49,7 +49,8 @@ def test01():
 # d.append("asgfag")
 # print d
 
-s = "http://blog.cnfol.com/i6rapple8/article/30612564.html"
-regex = re.compile('[%s]+' % re.escape(string.punctuation))
-s = regex.sub('_', s)
-print s
+# s = "http://blog.cnfol.com/i6rapple8/article/30612564.html"
+# regex = re.compile('[%s]+' % re.escape(string.punctuation))
+# s = regex.sub('_', s)
+# print s
+

@@ -2,7 +2,9 @@ import requests
 import threading
 from pyquery import PyQuery
 import re
+import os
 from globals import *
+import procedure
 
 
 manager_running = False
@@ -12,35 +14,22 @@ def seeding():
 	# global keyword_queue
 	r = requests.get(bing_hint_request_url, bing_hint_request_params)
 	page = r.text
-	tag_pattern = re.compile('"Txt":"[a-zA-Z0-9 ]+"')
-	hints = tag_pattern.findall(page)
-	# print hints
+
+	hints = procedure.extract_hints(page)
+
 	for hint in hints:
-		trimmed_hint = hint.replace('"Txt":"', '').replace('"', '')
-		keyword_queue.add(trimmed_hint)
-
-		m.update(trimmed_hint)
+		keyword_queue.add(hint)
+		m.update(hint)
 		covered_keyword.add(m.hexdigest())
-
 
 def search(keyword):
 	request = bing_news_base + keyword.replace(' ', '+')
 	r = requests.get(request)
 	page = r.text
-	# print page.encode("utf-8")
-	d = PyQuery(page)
-	links = d('.newstitle>a')
-	# print links
+	
+	entries = procedure.extract_links(page)
 
-	extend_keyword_link = []
-	extend_keyword_hashcode = []
-	extend_link_list = []
-
-	for link in links:
-		link = PyQuery(link)
-		# get title and link from html
-		title = link.text().encode("utf-8")
-		link = link.attr('href')
+	for link, title in entries:
 		print title
 		m.update(title)
 		extend_keyword_hashcode.append(m.hexdigest())
@@ -54,11 +43,12 @@ def search(keyword):
 			continue
 		keyword_queue.add(extend_keyword_link[i])
 		covered_keyword.add(extend_keyword_hashcode[i])
-		link_list.append(extend_link_list[i])
+		pool.add_task(procedure.process_url, extend_link_list[i])
+		# link_list.append(extend_link_list[i])
 	lock.release()
 
-	if not worker_captain.is_whipping():
-		worker_captain.whip()
+	# if not worker_captain.is_whipping():
+	# 	worker_captain.whip()
 
 	if not manager_running:
 		process()
@@ -79,6 +69,9 @@ def process():
 	print "manager thread exiting..."
 
 if __name__ == "__main__":
+	if not os.path.exists(output_dir):
+		os.makedirs(output_dir)
+
 	seeding()
 	print keyword_queue
-	process()
+	# process()

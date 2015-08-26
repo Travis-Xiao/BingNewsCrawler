@@ -7,13 +7,6 @@ import threading
 __author__ = 'Travis'
 
 
-def worker(url):
-	# generate unique file name for storage
-	url_unquoted = urllib2.unquote(url.decode('utf8'))
-	globals.m.update(url_unquoted)
-	url_unquoted = globals.regex.sub(' ', url_unquoted)
-	storage_file = globals.m.hexdigest()[:6] + "_" + url_unquoted + ".html"
-	urllib.urlretrieve(url, globals.output_dir + storage_file)
 
 
 class WorkerCaptain:
